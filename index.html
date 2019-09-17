@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Cassandra</title>
+	<link rel="stylesheet" href="css/reveal.css">
+	<link rel="stylesheet" href="css/theme/beige.css" id="theme">
+	<link rel="stylesheet" href="css/custom.css">
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/styles/solarized-light.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/highlight.min.js"></script>
+</head>
+
+<body>
+	<div class="reveal">
+		<div class="slides">
+			<!-- Intro -->
+			<section>
+				<section data-background-color="white" data-background="img/title.png" data-background-size="100%">
+					<h1>Java</h1>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section>
+					<img class="plain" src="img/you_are_here.png" height="150">
+					<aside class="notes">
+					</aside>
+				</section>
+			</section>
+
+			<!-- Partie 1 - Java -->
+			<!--
+				je présente une application spring "classique"
+				et je décris différentes parties qui m'intéressent:
+				- proxification (annotation, local thread storage,…)
+				- création de classe à partir de l'interface (annotation, création dynamique de classes)
+				- injection de dépendance (découverte du classpath)
+				- 
+			  -->
+			<section>
+				<section>
+					<h2>Une application java spring</h2>
+					<!-- du code sur intellij -->
+					<aside class="notes">
+					</aside>
+				</section>
+			</section>
+
+			<!-- Partie 2 - L'univers java -->
+			<!--
+			  - java 9, 10, 11, 12, 13,…
+			  - jigsaw
+			  - graalvm (quarkus)
+			  -->
+			<section>
+				<section>
+					<h2 style="color: #5d5d5d;">Exemple</h2>
+					<h3>Fournisseur de données météo</h3>
+					<aside class="notes">
+						<h2>Pierre</h2>
+					</aside>
+				</section>
+			</section>
+
+			<!-- Partie 3 l'avenir de java -->
+			<!--
+				Remis Forax, project loom etc
+			  -->
+			<section>
+				<section>
+					<h2>Résultat</h2>
+					<img src="img/conclusion.png" class="stretch"/>
+					<aside class="notes">
+						<h2>Michel</h2>
+						TODO
+					</aside>
+				</section>
+			</section>
+
+			<section>
+				<h2>Licence</h2>
+				Pour ce qui concerne tous les contenus que nous avons produits dans cette présentation :
+				<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/"><img alt="Licence Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Dataset" property="dct:title" rel="dct:type">Découvrir les subtilités de Cassandra</span> de <a xmlns:cc="http://creativecommons.org/ns#" href="https://barmic.github.io/viseo-take-an-hour_cassandra" property="cc:attributionName" rel="cc:attributionURL">Viseo -  Pierre Bourret & Michel Barret</a> est mis à disposition selon les termes de la <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">licence Creative Commons Attribution - Pas d’Utilisation Commerciale 4.0 International</a>.<br />Fondé(e) sur une œuvre à <a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/barmic/viseo-take-an-hour_cassandra.git" rel="dct:source">https://github.com/barmic/viseo-take-an-hour_cassandra.git</a>.
+			</section>
+		</div>
+	</div>
+	<script src="lib/js/head.min.js"></script>
+	<script src="js/reveal.js"></script>
+
+	<script>
+		// Required, even if empty.
+		Reveal.initialize({
+            dependencies: [
+                { src: 'plugin/notes/notes.js', async: true },
+                { src: 'plugin/tagcloud/tagcloud.js', async: true }
+            ],
+            // slideNumber: 'c/t', // Absolute slide numbers (with total).
+            slideNumber: true, // Enable hierarchical slide numbers
+            history: true // Enable slide number in URL fragment
+		});
+		// Automatic fragment numbering
+var fragmentNumbering = function ( event ) {
+  var fragments = $(event.currentSlide).find('.fragment');
+  var order = new Array(fragments.length);
+
+  $(fragments).filter('[data-index]').each( function () {
+    var index = parseInt($(this).attr('data-index')) - 1;
+    if (index < 0 || index >= order.length) {
+      alert('Invalid data-index: ' + index);
+      return;
+    }
+    if (typeof order[index] == 'undefined') {
+      order[index] = [ $(this) ];
+    } else {
+      order[index].push($(this));
+    }
+  });
+
+  var index = 0;
+  $(fragments).not('[data-index]').each( function () {
+    while(typeof order[index] != 'undefined') {
+      index = index + 1;
+    }
+    order[index] = [ $(this) ];
+  });
+
+  $(order).each( function (index) {
+    $(this).each( function () {
+      $(this).attr('data-fragment-index', index);
+    })
+  });
+};
+Reveal.addEventListener('ready', fragmentNumbering);
+Reveal.addEventListener('slidechanged', fragmentNumbering);
+
+hljs.initHighlightingOnLoad();
+
+		function vidplay() {
+			var video = document.getElementById("Video1");
+			if (video.paused) {
+				video.play();
+			}
+		}
+	</script>
+</body>
+</html>
