@@ -32,6 +32,9 @@ dependencies {
         exclude(module = "junit")
     }
 
+    implementation("org.projectlombok:lombok:1.18.10")
+    annotationProcessor("org.projectlombok:lombok:1.18.10")
+
     implementation("com.google.flogger:flogger:0.4")
     implementation("com.google.flogger:flogger-system-backend:0.4")
 
