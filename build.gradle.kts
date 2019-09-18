@@ -17,16 +17,27 @@ repositories {
 }
 
 tasks.getByName<BootJar>("bootJar") {
-    mainClassName = "com.viseo.fes.java.App"
+    mainClassName = "com.viseo.fes.java.ApplicationViseo"
     classifier = "boot"
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-tomcat")
-    // This dependency is found on compile classpath of this component and consumers.
-    implementation("com.google.guava:guava:27.0.1-jre")
+    testCompile("org.springframework.boot:spring-boot-starter-test") {
+        exclude(module = "junit")
+    }
 
-    // Use JUnit test framework
-    testImplementation("junit:junit:4.12")
+    implementation("com.google.flogger:flogger:0.4")
+    implementation("com.google.flogger:flogger-system-backend:0.4")
+
+    testImplementation("org.junit.platform:junit-platform-launcher")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testImplementation("org.junit.jupiter:junit-jupiter-params")
+    testImplementation("org.assertj:assertj-core:3.13.2")
 }
