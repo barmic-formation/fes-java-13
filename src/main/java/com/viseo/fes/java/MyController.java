@@ -1,17 +1,20 @@
 package com.viseo.fes.java;
 
-import lombok.RequiredArgsConstructor;
+import com.google.common.flogger.FluentLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import com.google.common.flogger.FluentLogger;
 
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
 @RestController
 public class MyController {
 	private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 	private final MyAwesomeService awesomeService;
+
+	@Autowired
+	public MyController(MyAwesomeService awesomeService) {
+		this.awesomeService = awesomeService;
+	}
 
 	@ResponseBody
 	@GetMapping("/")
