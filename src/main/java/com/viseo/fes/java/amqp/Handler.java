@@ -9,4 +9,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Handler {
     String queue() default "";
+    int prefetch() default 5;
 }

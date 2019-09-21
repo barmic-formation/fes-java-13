@@ -1,7 +1,8 @@
 package com.viseo.fes.java;
 
-import com.google.common.flogger.FluentLogger;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -9,11 +10,11 @@ import java.util.List;
  * Present lambda, invokedynameik, typing
  */
 class Lambda {
-	private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+	private static Logger log = LoggerFactory.getLogger(Lambda.class);
 	@Test
 	void foo() {
 		List.of(12, 13, 14).stream()
 				.map(i -> Integer.toString(i))
-				.forEach(logger.atInfo()::log);
+				.forEach(log::info);
 	}
 }

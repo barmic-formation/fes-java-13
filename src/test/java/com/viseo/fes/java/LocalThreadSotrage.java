@@ -1,7 +1,9 @@
 package com.viseo.fes.java;
 
-import com.google.common.flogger.FluentLogger;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -9,8 +11,9 @@ import java.util.concurrent.ExecutionException;
 /**
  * Present local thread storage
  */
+@Disabled
 class LocalThreadSotrage {
-    private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+    private static Logger log = LoggerFactory.getLogger(LocalThreadSotrage.class);
     private static class Foo {
         private static ThreadLocal<Integer> threadLocalValue = new ThreadLocal<>();
 
@@ -34,7 +37,7 @@ class LocalThreadSotrage {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                logger.atInfo().log("plouf %d", f1.value());
+                log.info("plouf {}", f1.value());
             }
         }).start();
         new Thread(() -> {
@@ -46,7 +49,7 @@ class LocalThreadSotrage {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                logger.atInfo().log("plaf %d", f1.value());
+                log.info("plaf {}", f1.value());
             }
         }).start();
         new CompletableFuture<>().get();

@@ -1,12 +1,13 @@
 package com.viseo.fes.java;
 
-import com.google.common.flogger.FluentLogger;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 class Proxy {
-    private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+    private static Logger log = LoggerFactory.getLogger(Proxy.class);
     @FunctionalInterface
     interface Toto {
         Integer get();
@@ -16,9 +17,9 @@ class Proxy {
         List<Class<Toto>> classes = List.of(Toto.class);
         Toto t = () -> 45;
         Toto coucou = (Toto)java.lang.reflect.Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), classes.toArray(new Class<?>[0]), (proxy, method, args) -> {
-            logger.atInfo().log("coucou");
+            log.info("coucou");
             return t.get();
         });
-        logger.atInfo().log("coucou %d", coucou.get());
+        log.info("coucou {}", coucou.get());
     }
 }
