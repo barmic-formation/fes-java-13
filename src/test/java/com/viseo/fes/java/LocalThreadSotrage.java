@@ -1,57 +1,56 @@
 package com.viseo.fes.java;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Present local thread storage
  */
-@Disabled
 class LocalThreadSotrage {
     private static Logger log = LoggerFactory.getLogger(LocalThreadSotrage.class);
     private static class Foo {
-        private static ThreadLocal<Integer> threadLocalValue = new ThreadLocal<>();
+        private static ThreadLocal<String> threadLocalValue = new ThreadLocal<>();
+        private static String local;
 
-        int value() {
-            return threadLocalValue.get();
+        Foo(String value) {
+            threadLocalValue.set(value);
+            local = value;
         }
 
-        void value(int v) {
-            threadLocalValue.set(v);
+        @Override
+        public String toString() {
+            return "Foo{thread local:" + threadLocalValue.get() + "/local:" + local + '}';
         }
     }
 
     @Test
-    void foo() throws ExecutionException, InterruptedException {
-        new Thread(() -> {
-            Foo f1 = new Foo();
-            f1.value(12);
-            while (true) {
-                try {
-                    Thread.sleep(1_000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+    void foo() throws InterruptedException {
+        List<Thread> threads = Stream.of(
+                new Thread(buildRunnable("plouf")),
+                new Thread(buildRunnable("plaf"))
+        )
+                .peek(Thread::start)
+                .collect(Collectors.toList());
+        Thread.sleep(30_00);
+        threads.forEach(Thread::interrupt);
+    }
+
+    private Runnable buildRunnable(String name) {
+        return () -> {
+            Foo f1 = new Foo(name);
+            try {
+                while (true) {
+                    Thread.sleep(500);
+                    log.info("{}", f1);
                 }
-                log.info("plouf {}", f1.value());
+            } catch (InterruptedException e) {
+                log.error("Interrupted");
             }
-        }).start();
-        new Thread(() -> {
-            Foo f1 = new Foo();
-            f1.value(42);
-            while (true) {
-                try {
-                    Thread.sleep(1_000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                log.info("plaf {}", f1.value());
-            }
-        }).start();
-        new CompletableFuture<>().get();
+        };
     }
 }
