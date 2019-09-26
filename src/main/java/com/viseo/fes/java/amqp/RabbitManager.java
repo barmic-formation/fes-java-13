@@ -3,7 +3,6 @@ package com.viseo.fes.java.amqp;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
-import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyFactory;
 import org.apache.logging.log4j.ThreadContext;
 import org.reflections.Reflections;
@@ -12,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URISyntaxException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -48,17 +48,7 @@ public class RabbitManager {
         factory.setSuperclass(clazz);
         factory.setFilter(method -> method.isAnnotationPresent(YouShallNotPass.class));
 
-        MethodHandler handler = (self, thisMethod, proceed, args) -> {
-            String authorizedUser = thisMethod.getAnnotation(YouShallNotPass.class).unlessYouAre();
-            if (authorizedUser.equals(ThreadContext.get("user"))) {
-                return proceed.invoke(self, args);
-            } else {
-                log.warn("Trying illegal access to {}", thisMethod.getName());
-                return true;
-            }
-        };
-
-        Object bean = factory.create(new Class<?>[0], new Object[0], handler);
+        Object bean = factory.create(new Class<?>[0], new Object[0], this::authorization);
         Channel channel = conn.createChannel();
 
         Stream.of(clazz.getDeclaredMethods())
@@ -81,5 +71,15 @@ public class RabbitManager {
                 log.error("error", e);
             }
         });
+    }
+
+    private Object authorization(Object self, Method thisMethod, Method proceed, Object[] args) throws Throwable {
+        String authorizedUser = thisMethod.getAnnotation(YouShallNotPass.class).unlessYouAre();
+        if (authorizedUser.equals(ThreadContext.get("user"))) {
+            return proceed.invoke(self, args);
+        } else {
+            log.warn("Trying illegal access to {}", thisMethod.getName());
+            return true;
+        }
     }
 }
