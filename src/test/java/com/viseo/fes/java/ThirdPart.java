@@ -6,8 +6,8 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Proxy;
 
-class TestProxy {
-    private static Logger log = LoggerFactory.getLogger(TestProxy.class);
+class ThirdPart {
+    private static Logger log = LoggerFactory.getLogger(ThirdPart.class);
 
     @FunctionalInterface
     interface Toto {
@@ -15,16 +15,16 @@ class TestProxy {
     }
 
     @Test
-    void foo() {
-        Class<?>[] classes = new Class<?>[]{Toto.class};
+    void run() {
+        Class<?>[] classes = new Class<?>[]{Toto.class}; // <- seul des interfaces peut être utilisée
         Toto t = () -> 45;
         ClassLoader cLoader = Thread.currentThread().getContextClassLoader();
 
-        Toto coucou = (Toto) Proxy.newProxyInstance(cLoader, classes, (proxy, method, args) -> {
+        Toto myAwesomeProxy = (Toto) Proxy.newProxyInstance(cLoader, classes, (proxy, method, args) -> {
             log.info("handled");
             return t.get();
         });
 
-        log.info("usage {}", coucou.get());
+        log.info("call myAwesomeProxy {}", myAwesomeProxy.get());
     }
 }

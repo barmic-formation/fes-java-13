@@ -6,13 +6,17 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-/**
- * Present lambda, invokedynameik, typing
- */
-class Lambda {
-	private static Logger log = LoggerFactory.getLogger(Lambda.class);
+class FirstPart {
+	private static Logger log = LoggerFactory.getLogger(FirstPart.class);
+
+	public static class YetAnotherClass {
+		public void yetAnotherMethod(YetAnotherClass this) {
+		}
+	}
+
 	@Test
 	void foo() {
+		new YetAnotherClass().yetAnotherMethod(); // WTF?!!!
 		List.of(12, 13, 14).stream()
 				.map(i -> Integer.toString(i))
 				.forEach(log::info);
